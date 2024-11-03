@@ -150,7 +150,8 @@
         let selectedGame;
         let guessCount = 0;
         const maxGuesses = 10;
-
+        let validGuess = false; // Track if a valid suggestion was chosen
+    
         // Fetch the games list from games.json and select a random game
         fetch('https://keircc.github.io/GuessTheGame/games.json')
             .then(response => response.json())
@@ -160,17 +161,18 @@
                 console.log("Selected game:", selectedGame);
             })
             .catch(error => console.error("Error loading games:", error));
-
+    
         function selectRandomGame() {
             const randomIndex = Math.floor(Math.random() * gamesList.length);
             return gamesList[randomIndex];
         }
-
+    
         function showSuggestions() {
             const input = document.getElementById('guess').value.toLowerCase();
             const suggestions = document.getElementById('suggestions');
             suggestions.innerHTML = '';
-
+            validGuess = false; // Reset valid guess on new input
+    
             if (input) {
                 const filteredGames = gamesList.filter(game => game.name.toLowerCase().includes(input));
                 filteredGames.forEach(game => {
@@ -179,28 +181,29 @@
                     div.className = 'suggestion';
                     div.onclick = () => {
                         document.getElementById('guess').value = game.name;
+                        validGuess = true; // Set valid guess when suggestion is clicked
                         suggestions.innerHTML = '';
                     };
                     suggestions.appendChild(div);
                 });
             }
         }
-
+    
         function submitGuess() {
+            if (!validGuess) {
+                alert("Please select a valid game from the suggestions.");
+                return;
+            }
+            
             if (guessCount >= maxGuesses) {
                 alert(`You've reached the maximum guesses! The correct game was: ${selectedGame.name}`);
                 return;
             }
-
+    
             const userGuess = document.getElementById('guess').value.trim();
-            if (!userGuess) {
-                alert("Please enter a guess.");
-                return;
-            }
-
             const feedback = document.getElementById('feedback');
             guessCount++;
-
+    
             if (userGuess.toLowerCase() === selectedGame.name.toLowerCase()) {
                 feedback.innerText = `Correct! You've guessed the game in ${guessCount} guesses!`;
                 displayGuessResult(userGuess);
@@ -208,8 +211,12 @@
                 feedback.innerText = `Incorrect! You have ${maxGuesses - guessCount} guesses left. Here’s how close you were:`;
                 displayGuessResult(userGuess);
             }
+            validGuess = false; // Reset after each guess
         }
-
+    
+        // Add other existing functions as needed...
+    </script>
+    
         function displayGuessResult(guess) {
             const guessHistory = document.getElementById('guess-history');
             const guessedGame = gamesList.find(game => game.name.toLowerCase() === guess.toLowerCase());
