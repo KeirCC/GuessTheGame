@@ -196,31 +196,37 @@ function submitGuess() {
         return;
     }
 
-        const userGuess = document.getElementById('guess').value.trim().toLowerCase();
+    // Get the user's guess in its original format
+    const userGuess = document.getElementById('guess').value.trim();
+
+    // Check if the user input is empty
     if (!userGuess) {
         alert("Please enter a guess.");
         return;
     }
 
-    // Check if guess is a duplicate
-    if (guessedGames.includes(userGuess)) {
+    // Convert userGuess to lowercase for comparison purposes only
+    const userGuessLower = userGuess.toLowerCase();
+
+    // Check if guess is a duplicate (using lowercase for comparison)
+    if (guessedGames.map(game => game.toLowerCase()).includes(userGuessLower)) {
         alert("You have already guessed this game!");
         return;
     }
 
-    // Check if guess is valid
-    if (!validGuesses.includes(userGuess)) {
+    // Check if guess is valid (using lowercase for comparison)
+    if (!validGuesses.includes(userGuessLower)) {
         alert("Please select a valid game from the suggestions.");
         return;
     }
 
-    // Add the valid guess to the guessedGames array
+    // Add the original-case guess to the guessedGames array
     guessedGames.push(userGuess);
 
     const feedback = document.getElementById('feedback');
     guessCount++;
 
-    if (userGuess === selectedGame.name.toLowerCase()) {
+    if (userGuessLower === selectedGame.name.toLowerCase()) {
         feedback.innerText = `Correct! You've guessed the game in ${guessCount} guesses!`;
         displayGuessResult(userGuess);
     } else {
