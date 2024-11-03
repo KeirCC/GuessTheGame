@@ -146,145 +146,147 @@
     <div id="guess-history"></div>
 
     <script>
-        let gamesList = [];
-        let selectedGame;
-        let guessCount = 0;
-        const maxGuesses = 10;
-        let guessedGames = [];
-        let validGuesses = [];
+let gamesList = [];
+let selectedGame;
+let guessCount = 0;
+const maxGuesses = 10;
+let guessedGames = [];
+let validGuesses = [];
 
-        // Fetch the games list from games.json and select a random game
-        fetch('https://keircc.github.io/GuessTheGame/games.json')
-            .then(response => response.json())
-            .then(data => {
-                gamesList = data;
-                selectedGame = selectRandomGame();
-                console.log("Selected game:", selectedGame);
-            })
-            .catch(error => console.error("Error loading games:", error));
+// Fetch the games list from games.json and select a random game
+fetch('https://keircc.github.io/GuessTheGame/games.json')
+    .then(response => response.json())
+    .then(data => {
+        gamesList = data;
+        validGuesses = gamesList.map(game => game.name.toLowerCase());
+        selectedGame = selectRandomGame();
+        console.log("Selected game:", selectedGame);
+    })
+    .catch(error => console.error("Error loading games:", error));
 
-        function selectRandomGame() {
-            const randomIndex = Math.floor(Math.random() * gamesList.length);
-            return gamesList[randomIndex];
+function selectRandomGame() {
+    const randomIndex = Math.floor(Math.random() * gamesList.length);
+    return gamesList[randomIndex];
+}
+
+function showSuggestions() {
+    const input = document.getElementById('guess').value.toLowerCase();
+    const suggestions = document.getElementById('suggestions');
+    suggestions.innerHTML = '';
+
+    if (input) {
+        const filteredGames = gamesList.filter(game => game.name.toLowerCase().includes(input));
+        filteredGames.forEach(game => {
+            const div = document.createElement('div');
+            div.innerText = game.name;
+            div.className = 'suggestion';
+            div.onclick = () => {
+                document.getElementById('guess').value = game.name;
+                suggestions.innerHTML = '';
+                document.getElementById('guess').focus(); // Focus back on input
+            };
+            suggestions.appendChild(div);
+        });
+    }
+}
+
+function submitGuess() {
+    if (guessCount >= maxGuesses) {
+        alert(`You've reached the maximum guesses! The correct game was: ${selectedGame.name}`);
+        return;
+    }
+
+        const userGuess = document.getElementById('guess').value.trim().toLowerCase();
+    if (!userGuess) {
+        alert("Please enter a guess.");
+        return;
+    }
+
+    // Check if guess is a duplicate
+    if (guessedGames.includes(userGuess)) {
+        alert("You have already guessed this game!");
+        return;
+    }
+
+    // Check if guess is valid
+    if (!validGuesses.includes(userGuess)) {
+        alert("Please select a valid game from the suggestions.");
+        return;
+    }
+
+    // Add the valid guess to the guessedGames array
+    guessedGames.push(userGuess);
+
+    const feedback = document.getElementById('feedback');
+    guessCount++;
+
+    if (userGuess === selectedGame.name.toLowerCase()) {
+        feedback.innerText = `Correct! You've guessed the game in ${guessCount} guesses!`;
+        displayGuessResult(userGuess);
+    } else {
+        feedback.innerText = `Incorrect! You have ${maxGuesses - guessCount} guesses left. Here’s how close you were:`;
+        displayGuessResult(userGuess);
+    }
+}
+
+function displayGuessResult(guess) {
+    const guessHistory = document.getElementById('guess-history');
+    const guessedGame = gamesList.find(game => game.name.toLowerCase() === guess);
+    const guessEntry = document.createElement('div');
+    guessEntry.className = 'guess-entry';
+
+    const guessNameDiv = document.createElement('div');
+    guessNameDiv.className = 'guess-name';
+    guessNameDiv.innerText = guess;
+    guessEntry.appendChild(guessNameDiv);
+
+    const resultContainer = document.createElement('div');
+    resultContainer.className = 'result-container';
+
+    const fields = [
+        { label: 'Genre', key: 'genre' },
+        { label: 'Date Released', key: 'year' },
+        { label: 'Platform', key: 'platform' },
+        { label: 'Publisher', key: 'publisher' },
+        { label: 'Developer', key: 'developer' }
+    ];
+
+    fields.forEach(field => {
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'result';
+
+        const heading = document.createElement('div');
+        heading.className = 'result-heading';
+        heading.innerText = field.label;
+
+        const data = document.createElement('div');
+        data.className = 'result-data';
+        data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
+
+        // Exact match (green) condition
+        if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
+            resultDiv.classList.add('green');
+        } 
+        // "Close" match for the year (yellow) condition, parse values as integers
+        else if (field.key === 'year' && guessedGame && selectedGame.year &&
+                 Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
+            console.log(`Year close match found for ${guessedGame.name}: ${guessedGame.year} vs ${selectedGame.year}`);
+            resultDiv.classList.add('yellow');
+        } 
+        // No match (grey) condition
+        else {
+            resultDiv.classList.add('grey');
         }
 
-        function showSuggestions() {
-            const input = document.getElementById('guess').value.toLowerCase();
-            const suggestions = document.getElementById('suggestions');
-            suggestions.innerHTML = '';
+        resultDiv.appendChild(heading);
+        resultDiv.appendChild(data);
+        resultContainer.appendChild(resultDiv);
+    });
 
-            if (input) {
-                const filteredGames = gamesList.filter(game => game.name.toLowerCase().includes(input));
-                filteredGames.forEach(game => {
-                    const div = document.createElement('div');
-                    div.innerText = game.name;
-                    div.className = 'suggestion';
-                    div.onclick = () => {
-                        document.getElementById('guess').value = game.name;
-                        suggestions.innerHTML = '';
-                    };
-                    suggestions.appendChild(div);
-                });
-            }
-        }
+    guessEntry.appendChild(resultContainer);
+    guessHistory.appendChild(guessEntry);
+}
 
-        function submitGuess() {
-            if (guessCount >= maxGuesses) {
-                alert(`You've reached the maximum guesses! The correct game was: ${selectedGame.name}`);
-                return;
-            }
-
-            // Ensure guess is lowercase for comparison
-            const userGuess = document.getElementById('guess').value.trim().toLowerCase();
-            if (!userGuess) {
-                alert("Please enter a guess.");
-                return;
-            }
-
-            // Check if guess is a duplicate
-            if (guessedGames.includes(userGuess)) {
-            alert("You have already guessed this game!");
-            return;
-            }
-
-            // Check if guess is valid
-            if (!validGuesses.includes(userGuess)) {
-            alert("Please select a valid game from the suggestions.");
-            return;
-            }
-
-            //Add the valid guess to the guessedGames array
-            guessedGames.push(userGuess);
-
-            const feedback = document.getElementById('feedback');
-            guessCount++;
-
-            if (userGuess.toLowerCase() === selectedGame.name.toLowerCase()) {
-                feedback.innerText = `Correct! You've guessed the game in ${guessCount} guesses!`;
-                displayGuessResult(userGuess);
-            } else {
-                feedback.innerText = `Incorrect! You have ${maxGuesses - guessCount} guesses left. Here’s how close you were:`;
-                displayGuessResult(userGuess);
-            }
-        }
-
-        function displayGuessResult(guess) {
-            const guessHistory = document.getElementById('guess-history');
-            const guessedGame = gamesList.find(game => game.name.toLowerCase() === guess.toLowerCase());
-            const guessEntry = document.createElement('div');
-            guessEntry.className = 'guess-entry';
-
-            const guessNameDiv = document.createElement('div');
-            guessNameDiv.className = 'guess-name';
-            guessNameDiv.innerText = guess;
-            guessEntry.appendChild(guessNameDiv);
-
-            const resultContainer = document.createElement('div');
-            resultContainer.className = 'result-container';
-
-            const fields = [
-                { label: 'Genre', key: 'genre' },
-                { label: 'Date Released', key: 'year' },
-                { label: 'Platform', key: 'platform' },
-                { label: 'Publisher', key: 'publisher' },
-                { label: 'Developer', key: 'developer' }
-            ];
-
-            fields.forEach(field => {
-                const resultDiv = document.createElement('div');
-                resultDiv.className = 'result';
-
-                const heading = document.createElement('div');
-                heading.className = 'result-heading';
-                heading.innerText = field.label;
-
-                const data = document.createElement('div');
-                data.className = 'result-data';
-                data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
-
-                // Exact match (green) condition
-                if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
-                    resultDiv.classList.add('green');
-                } 
-                // "Close" match for the year (yellow) condition, parse values as integers
-                else if (field.key === 'year' && guessedGame && selectedGame.year &&
-                         Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
-                    console.log(`Year close match found for ${guessedGame.name}: ${guessedGame.year} vs ${selectedGame.year}`);
-                    resultDiv.classList.add('yellow');
-                } 
-                // No match (grey) condition
-                else {
-                    resultDiv.classList.add('grey');
-                }
-
-                resultDiv.appendChild(heading);
-                resultDiv.appendChild(data);
-                resultContainer.appendChild(resultDiv);
-            });
-
-            guessEntry.appendChild(resultContainer);
-            guessHistory.appendChild(guessEntry);
-        }
     </script>
 </body>
 </html>
