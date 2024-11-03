@@ -21,7 +21,7 @@
     { "name": "Assassin's Creed III", "genre": "Action-Adventure", "year": 2012, "platform": "PC, PS3, Xbox 360, Wii U", "publisher": "Ubisoft", "developer": "Ubisoft" },
     { "name": "Assassin's Creed IV: Black Flag", "genre": "Action-Adventure", "year": 2013, "platform": "PC, PS3, PS4, Xbox 360, Xbox One, Wii U", "publisher": "Ubisoft", "developer": "Ubisoft" },
     { "name": "Assassin's Creed Mirage", "genre": "Action-Adventure", "year": 2023, "platform": "PC, PS4, PS5, Xbox One, Xbox Series X/S", "publisher": "Ubisoft", "developer": "Ubisoft" },
-    { "name": "Atelier Ryza: Ever Darkness & the Secret Hideout", "genre": "RPG", "year": 2019, "platform": "PC, Consoles", "publisher": "Koei Tecmo", "developer": "Gust" }
+    { "name": "Atelier Ryza: Ever Darkness & the Secret Hideout", "genre": "RPG", "year": 2019, "platform": "PC, Consoles", "publisher": "Koei Tecmo", "developer": "Gust" },
     { "name": "Assassin's Creed Odyssey", "genre": "Action RPG", "year": 2018, "platform": "PC, PS4, Xbox One", "publisher": "Ubisoft", "developer": "Ubisoft" },
     { "name": "Assassin's Creed Origins", "genre": "Action RPG", "year": 2017, "platform": "PC, PS4, Xbox One", "publisher": "Ubisoft", "developer": "Ubisoft" },
     { "name": "Assassin's Creed Rogue", "genre": "Action-Adventure", "year": 2014, "platform": "PC, PS3, Xbox 360, PS4, Xbox One", "publisher": "Ubisoft", "developer": "Ubisoft" },
