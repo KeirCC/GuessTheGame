@@ -198,6 +198,18 @@
                 return;
             }
 
+            // Check if guess is a duplicate
+            if (guessedGames.includes(userGuess)) {
+            alert("You have already guessed this game!");
+            return;
+            }
+
+            // Check if guess is valid
+            if (!validGuesses.includes(userGuess)) {
+            alert("Please select a valid game from the suggestions.");
+            return;
+            }
+
             const feedback = document.getElementById('feedback');
             guessCount++;
 
