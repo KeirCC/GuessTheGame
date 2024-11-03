@@ -150,6 +150,8 @@
         let selectedGame;
         let guessCount = 0;
         const maxGuesses = 10;
+        let guessedGames = [];
+        let validGuesses = [];
 
         // Fetch the games list from games.json and select a random game
         fetch('https://keircc.github.io/GuessTheGame/games.json')
@@ -193,7 +195,7 @@
             }
 
             // Ensure guess is lowercase for comparison
-            const userGuess = document.getElementById('guess').value.trim().toLowercase();
+            const userGuess = document.getElementById('guess').value.trim().toLowerCase();
             if (!userGuess) {
                 alert("Please enter a guess.");
                 return;
