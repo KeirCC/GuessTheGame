@@ -1,0 +1,5 @@
+[
+    { "name": "The Legend of Zelda: Ocarina of Time", "genre": "Action-Adventure", "year": 1998, "platform": "N64", "publisher": "Nintendo", "developer": "Nintendo" },
+    { "name": "Super Mario 64", "genre": "Platform", "year": 1996, "platform": "N64", "publisher": "Nintendo", "developer": "Nintendo" },
+    { "name": "Half-Life 2", "genre": "Shooter", "year": 2004, "platform": "PC", "publisher": "Valve", "developer": "Valve" }
+]
