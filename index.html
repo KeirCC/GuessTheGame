@@ -198,7 +198,7 @@
         const maxGuesses = 10;
 
         // Fetch the games list from games.json and select a random game
-        fetch('https://github.com/KeirCC/GuessTheGame/blob/c179ce529cd293afe5cad3eff98da58c4ef86930/gamelist')
+        fetch('https://keircc.github.io/GuessTheGame/games.json')
             .then(response => response.json())
             .then(data => {
                 gamesList = data;
