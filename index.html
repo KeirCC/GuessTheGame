@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Game</title>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #121212;
+            color: white;
+        }
+        h1 {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+        #search-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+            position: relative;
+        }
+        #guess {
+            width: 70%;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1em;
+        }
+        #submit-btn {
+            padding: 10px 20px;
+            margin-left: 10px;
+            border: none;
+            border-radius: 20px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        #suggestions {
+            border: 1px solid #ccc;
+            max-height: 100px;
+            overflow-y: auto;
+            position: absolute;
+            background-color: #333;
+            color: white;
+            width: 70%;
+            border-radius: 10px;
+            z-index: 1000;
+ top: 40px;
+        }
+        .suggestion {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestion:hover {
+            background-color: #444;
+        }
+        #feedback {
+            margin: 20px;
+            font-size: 1.2em;
+        }
+        #guess-history {
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .guess-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            border: 1px solid #333;
+        }
+        .guess-name {
+            font-weight: bold;
+            font-size: 1em;
+            color: #ffffff;
+            flex: 0 0 20%;
+            text-align: left;
+        }
+        .result-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start;
+            flex: 1;
+        }
+        .result {
+            background-color: #1e1e1e;
+            color: white;
+            border-radius: 10px;
+            width: 100px;
+            padding: 10px;
+            font-size: 0.8em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #333;
+            text-align: center;
+        }
+        .result-heading {
+            font-size: 0.75em;
+            color: #aaaaaa;
+        }
+        .result-data {
+            font-size: 1em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        .green {
+            background-color: #4CAF50;
+        }
+        .grey {
+            background-color: #757575;
+        }
+.color-key {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.color-key p {
+    font-size: 1.2em;
+    color: #ccc;
+    margin-bottom: 10px;
+}
+
+.key-item {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+.key-item.no-match {
+    background-color: #333; /* Dark grey for "No Match" */
+}
+
+.key-item.close {
+    background-color: #FFD700; /* Yellow for "Close" */
+    color: black; /* Make text black for contrast */
+}
+
+.key-item.match {
+    background-color: #4CAF50; /* Green for "Match" */
+}
+
+/* For the Close (Yellow) background */
+.key-item.close {
+    background-color: #FFD700; /* Yellow background */
+    color: black; /* Black text for contrast */
+}
+
+/* For the Match (Green) background */
+.key-item.match {
+    background-color: #4CAF50; /* Green background */
+    color: black; /* Black text for contrast */
+}
+
+    </style>
+</head>
+<body>
+    <h1>Guess the Game!</h1>
+
+    <div id="search-container">
+        <input type="text" id="guess" placeholder="Type a guess here..." oninput="showSuggestions()" />
+        <button id="submit-btn" onclick="submitGuess()">Submit</button>
+        <div id="suggestions"></div>
+    </div>
+    
+    <div id="feedback">Guess the game based on the criteria below. You have 10 guesses.</div>
+
+    <div id="guess-history"></div>
+
+    <div class="color-key">
+        <p>Use the matching attributes to make more guesses. Good luck!</p>
+        <div class="key-item no-match">No Match</div>
+        <div class="key-item close">Close</div>
+        <div class="key-item match">Match</div>
+    </div>
+
+    <script>
+        let gamesList = [];
+        let selectedGame;
+        let guessCount = 0;
+        const maxGuesses = 10;
+
+        // Fetch the games list from games.json and select a random game
+        fetch('https://github.com/KeirCC/GuessTheGame/blob/c179ce529cd293afe5cad3eff98da58c4ef86930/gamelist')
+            .then(response => response.json())
+            .then(data => {
+                gamesList = data;
+                selectedGame = selectRandomGame();
+                console.log("Selected game:", selectedGame);
+            })
+            .catch(error => console.error("Error loading games:", error));
+
+        function selectRandomGame() {
+            const randomIndex = Math.floor(Math.random() * gamesList.length);
+            return gamesList[randomIndex];
+        }
+
+        function showSuggestions() {
+            const input = document.getElementById('guess').value.toLowerCase();
+            const suggestions = document.getElementById('suggestions');
+            suggestions.innerHTML = '';
+
+            if (input) {
+                const filteredGames = gamesList.filter(game => game.name.toLowerCase().includes(input));
+                filteredGames.forEach(game => {
+                    const div = document.createElement('div');
+                    div.innerText = game.name;
+                    div.className = 'suggestion';
+                    div.onclick = () => {
+                        document.getElementById('guess').value = game.name;
+                        suggestions.innerHTML = '';
+                    };
+                    suggestions.appendChild(div);
+                });
+            }
+        }
+
+        function submitGuess() {
+            if (guessCount >= maxGuesses) {
+                alert(`You've reached the maximum guesses! The correct game was: ${selectedGame.name}`);
+                return;
+            }
+
+            const userGuess = document.getElementById('guess').value.trim();
+            if (!userGuess) {
+                alert("Please enter a guess.");
+                return;
+            }
+
+            const feedback = document.getElementById('feedback');
+            guessCount++;
+
+            if (userGuess.toLowerCase() === selectedGame.name.toLowerCase()) {
+                feedback.innerText = `Correct! You've guessed the game in ${guessCount} guesses!`;
+                displayGuessResult(userGuess);
+            } else {
+                feedback.innerText = `Incorrect! You have ${maxGuesses - guessCount} guesses left. Here’s how close you were:`;
+                displayGuessResult(userGuess);
+            }
+        }
+
+        function displayGuessResult(guess) {
+            const guessHistory = document.getElementById('guess-history');
+            const guessedGame = gamesList.find(game => game.name.toLowerCase() === guess.toLowerCase());
+            const guessEntry = document.createElement('div');
+            guessEntry.className = 'guess-entry';
+
+            const guessNameDiv = document.createElement('div');
+            guessNameDiv.className = 'guess-name';
+            guessNameDiv.innerText = guess;
+            guessEntry.appendChild(guessNameDiv);
+
+            const resultContainer = document.createElement('div');
+            resultContainer.className = 'result-container';
+
+            const fields = [
+                { label: 'Genre', key: 'genre' },
+                { label: 'Date Released', key: 'year' },
+                { label: 'Platform', key: 'platform' },
+                { label: 'Publisher', key: 'publisher' },
+                { label: 'Developer', key: 'developer' }
+            ];
+
+            fields.forEach(field => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result';
+
+                const heading = document.createElement('div');
+                heading.className = 'result-heading';
+                heading.innerText = field.label;
+
+                const data = document.createElement('div');
+                data.className = 'result-data';
+                data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
+
+                if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
+                    resultDiv.classList.add('green');
+                } else {
+                    resultDiv.classList.add('grey');
+                }
+
+                resultDiv.appendChild(heading);
+                resultDiv.appendChild(data);
+                resultContainer.appendChild(resultDiv);
+            });
+
+            guessEntry.appendChild(resultContainer);
+            guessHistory.appendChild(guessEntry);
+        }
+    </script>
+</body>
+</html>
