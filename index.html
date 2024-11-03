@@ -237,13 +237,16 @@ function submitGuess() {
 
 function displayGuessResult(guess) {
     const guessHistory = document.getElementById('guess-history');
-    const guessedGame = gamesList.find(game => game.name.toLowerCase() === guess);
+
+    // Find the guessed game in a case-insensitive way
+    const guessedGame = gamesList.find(game => game.name.toLowerCase() === guess.toLowerCase());
+
     const guessEntry = document.createElement('div');
     guessEntry.className = 'guess-entry';
 
     const guessNameDiv = document.createElement('div');
     guessNameDiv.className = 'guess-name';
-    guessNameDiv.innerText = guess;
+    guessNameDiv.innerText = guess; // Display the original case guess
     guessEntry.appendChild(guessNameDiv);
 
     const resultContainer = document.createElement('div');
@@ -267,6 +270,8 @@ function displayGuessResult(guess) {
 
         const data = document.createElement('div');
         data.className = 'result-data';
+        
+        // Display data from guessedGame, or "Unknown" if not found
         data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
 
         // Exact match (green) condition
