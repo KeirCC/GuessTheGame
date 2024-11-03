@@ -192,7 +192,8 @@
                 return;
             }
 
-            const userGuess = document.getElementById('guess').value.trim();
+            // Ensure guess is lowercase for comparison
+            const userGuess = document.getElementById('guess').value.trim().toLowercase();
             if (!userGuess) {
                 alert("Please enter a guess.");
                 return;
@@ -209,6 +210,9 @@
             alert("Please select a valid game from the suggestions.");
             return;
             }
+
+            //Add the valid guess to the guessedGames array
+            guessedGames.push(userGuess);
 
             const feedback = document.getElementById('feedback');
             guessCount++;
