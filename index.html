@@ -223,6 +223,9 @@ function submitGuess() {
     // Add the original-case guess to the guessedGames array
     guessedGames.push(userGuess);
 
+    // Clear the input field after a valid guess
+    document.getElementById('guess').value = '';
+
     const feedback = document.getElementById('feedback');
     guessCount++;
 
