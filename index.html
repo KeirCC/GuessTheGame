@@ -84,7 +84,7 @@
         }
         .yellow {
     background-color: #FFD700; /* or any yellow shade you prefer */
-    color: black;
+    color: rgb(0, 0, 0);
         }
         .guess-name {
             font-weight: bold;
@@ -299,7 +299,8 @@
             resultDiv.classList.add('green');
         } 
         // "Close" match for the year (yellow) condition
-        else if (field.key === 'year' && guessedGame && Math.abs(guessedGame.year - selectedGame.year) <= 5) {
+        else if (field.key === 'year' && guessedGame && selectedGame.year &&
+                 Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
             resultDiv.classList.add('yellow');
         } 
         // No match (grey) condition
@@ -315,6 +316,7 @@
     guessEntry.appendChild(resultContainer);
     guessHistory.appendChild(guessEntry);
 }
+
     </script>
 </body>
 </html>
