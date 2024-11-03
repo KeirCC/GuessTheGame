@@ -83,7 +83,7 @@
             border: 1px solid #333;
         }
         .yellow {
-            background-color: #FFD700;
+            background-color: #FFD700 !important; /* Ensure yellow overrides other styles */
             color: rgb(0, 0, 0);
         }
         .guess-name {
@@ -248,7 +248,7 @@
                 if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
                     resultDiv.classList.add('green');
                 } 
-                // "Close" match for the year (yellow) condition
+                // "Close" match for the year (yellow) condition, parse values as integers
                 else if (field.key === 'year' && guessedGame && selectedGame.year &&
                          Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
                     console.log(`Year close match found for ${guessedGame.name}: ${guessedGame.year} vs ${selectedGame.year}`);
