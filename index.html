@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guess the Game</title>
+    <title>Guess the Game in progress</title>
      <style>
         body {
             font-family: Arial, sans-serif;
@@ -81,6 +81,10 @@
             border-radius: 10px;
             width: 100%;
             border: 1px solid #333;
+        }
+        .yellow {
+    background-color: #FFD700; /* or any yellow shade you prefer */
+    color: black;
         }
         .guess-name {
             font-weight: bold;
@@ -257,53 +261,60 @@
         }
 
         function displayGuessResult(guess) {
-            const guessHistory = document.getElementById('guess-history');
-            const guessedGame = gamesList.find(game => game.name.toLowerCase() === guess.toLowerCase());
-            const guessEntry = document.createElement('div');
-            guessEntry.className = 'guess-entry';
+    const guessHistory = document.getElementById('guess-history');
+    const guessedGame = gamesList.find(game => game.name.toLowerCase() === guess.toLowerCase());
+    const guessEntry = document.createElement('div');
+    guessEntry.className = 'guess-entry';
 
-            const guessNameDiv = document.createElement('div');
-            guessNameDiv.className = 'guess-name';
-            guessNameDiv.innerText = guess;
-            guessEntry.appendChild(guessNameDiv);
+    const guessNameDiv = document.createElement('div');
+    guessNameDiv.className = 'guess-name';
+    guessNameDiv.innerText = guess;
+    guessEntry.appendChild(guessNameDiv);
 
-            const resultContainer = document.createElement('div');
-            resultContainer.className = 'result-container';
+    const resultContainer = document.createElement('div');
+    resultContainer.className = 'result-container';
 
-            const fields = [
-                { label: 'Genre', key: 'genre' },
-                { label: 'Date Released', key: 'year' },
-                { label: 'Platform', key: 'platform' },
-                { label: 'Publisher', key: 'publisher' },
-                { label: 'Developer', key: 'developer' }
-            ];
+    const fields = [
+        { label: 'Genre', key: 'genre' },
+        { label: 'Date Released', key: 'year' },
+        { label: 'Platform', key: 'platform' },
+        { label: 'Publisher', key: 'publisher' },
+        { label: 'Developer', key: 'developer' }
+    ];
 
-            fields.forEach(field => {
-                const resultDiv = document.createElement('div');
-                resultDiv.className = 'result';
+    fields.forEach(field => {
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'result';
 
-                const heading = document.createElement('div');
-                heading.className = 'result-heading';
-                heading.innerText = field.label;
+        const heading = document.createElement('div');
+        heading.className = 'result-heading';
+        heading.innerText = field.label;
 
-                const data = document.createElement('div');
-                data.className = 'result-data';
-                data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
+        const data = document.createElement('div');
+        data.className = 'result-data';
+        data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
 
-                if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
-                    resultDiv.classList.add('green');
-                } else {
-                    resultDiv.classList.add('grey');
-                }
-
-                resultDiv.appendChild(heading);
-                resultDiv.appendChild(data);
-                resultContainer.appendChild(resultDiv);
-            });
-
-            guessEntry.appendChild(resultContainer);
-            guessHistory.appendChild(guessEntry);
+        // Exact match (green) condition
+        if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
+            resultDiv.classList.add('green');
+        } 
+        // "Close" match for the year (yellow) condition
+        else if (field.key === 'year' && guessedGame && Math.abs(guessedGame.year - selectedGame.year) <= 5) {
+            resultDiv.classList.add('yellow');
+        } 
+        // No match (grey) condition
+        else {
+            resultDiv.classList.add('grey');
         }
+
+        resultDiv.appendChild(heading);
+        resultDiv.appendChild(data);
+        resultContainer.appendChild(resultDiv);
+    });
+
+    guessEntry.appendChild(resultContainer);
+    guessHistory.appendChild(guessEntry);
+}
     </script>
 </body>
 </html>
