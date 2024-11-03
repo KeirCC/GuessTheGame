@@ -188,7 +188,7 @@
 
         function submitGuess() {
             if (guessCount >= maxGuesses) {
-                alert(You've reached the maximum guesses! The correct game was: ${selectedGame.name});
+                alert(`You've reached the maximum guesses! The correct game was: ${selectedGame.name}`);
                 return;
             }
 
@@ -202,10 +202,10 @@
             guessCount++;
 
             if (userGuess.toLowerCase() === selectedGame.name.toLowerCase()) {
-                feedback.innerText = Correct! You've guessed the game in ${guessCount} guesses!;
+                feedback.innerText = `Correct! You've guessed the game in ${guessCount} guesses!`;
                 displayGuessResult(userGuess);
             } else {
-                feedback.innerText = Incorrect! You have ${maxGuesses - guessCount} guesses left. Here’s how close you were:;
+                feedback.innerText = `Incorrect! You have ${maxGuesses - guessCount} guesses left. Here’s how close you were:`;
                 displayGuessResult(userGuess);
             }
         }
@@ -251,7 +251,7 @@
                 // "Close" match for the year (yellow) condition, parse values as integers
                 else if (field.key === 'year' && guessedGame && selectedGame.year &&
                          Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
-                    console.log(Year close match found for ${guessedGame.name}: ${guessedGame.year} vs ${selectedGame.year});
+                    console.log(`Year close match found for ${guessedGame.name}: ${guessedGame.year} vs ${selectedGame.year}`);
                     resultDiv.classList.add('yellow');
                 } 
                 // No match (grey) condition
