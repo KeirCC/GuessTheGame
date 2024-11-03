@@ -1,6 +1,26 @@
 [
     { "name": "The Legend of Zelda: Ocarina of Time", "genre": "Action-Adventure", "year": 1998, "platform": "N64", "publisher": "Nintendo", "developer": "Nintendo" },
     { "name": "Super Mario 64", "genre": "Platform", "year": 1996, "platform": "N64", "publisher": "Nintendo", "developer": "Nintendo" },
-    { "name": "Half-Life 2", "genre": "Shooter", "year": 2004, "platform": "PC", "publisher": "Valve", "developer": "Valve" }
+    { "name": "Half-Life 2", "genre": "Shooter", "year": 2004, "platform": "PC", "publisher": "Valve", "developer": "Valve" },
+    { "name": "Grand Theft Auto V", "genre": "Action-Adventure", "year": 2013, "platform": "PS3, PS4, Xbox 360, Xbox One, PC", "publisher": "Rockstar Games", "developer": "Rockstar North" },
+    { "name": "The Elder Scrolls V: Skyrim", "genre": "RPG", "year": 2011, "platform": "PC, PS3, Xbox 360", "publisher": "Bethesda Softworks", "developer": "Bethesda Game Studios" },
+    { "name": "Minecraft", "genre": "Sandbox", "year": 2011, "platform": "PC, Mobile, Consoles", "publisher": "Mojang", "developer": "Mojang" },
+    { "name": "The Witcher 3: Wild Hunt", "genre": "RPG", "year": 2015, "platform": "PC, PS4, Xbox One", "publisher": "CD Projekt", "developer": "CD Projekt Red" },
+    { "name": "Red Dead Redemption 2", "genre": "Action-Adventure", "year": 2018, "platform": "PS4, Xbox One, PC", "publisher": "Rockstar Games", "developer": "Rockstar Studios" },
+    { "name": "Dark Souls", "genre": "Action RPG", "year": 2011, "platform": "PS3, Xbox 360, PC", "publisher": "Bandai Namco", "developer": "FromSoftware" },
+    { "name": "Portal 2", "genre": "Puzzle-Platformer", "year": 2011, "platform": "PC, PS3, Xbox 360", "publisher": "Valve", "developer": "Valve" },
+    { "name": "Fortnite", "genre": "Battle Royale", "year": 2017, "platform": "PC, Mobile, Consoles", "publisher": "Epic Games", "developer": "Epic Games" },
+    { "name": "BioShock", "genre": "Shooter", "year": 2007, "platform": "PC, PS3, Xbox 360", "publisher": "2K Games", "developer": "Irrational Games" },
+    { "name": "Fallout 3", "genre": "RPG", "year": 2008, "platform": "PC, PS3, Xbox 360", "publisher": "Bethesda Softworks", "developer": "Bethesda Game Studios" },
+    { "name": "Mass Effect 2", "genre": "RPG", "year": 2010, "platform": "PC, PS3, Xbox 360", "publisher": "Electronic Arts", "developer": "BioWare" },
+    { "name": "God of War", "genre": "Action-Adventure", "year": 2018, "platform": "PS4", "publisher": "Sony Interactive Entertainment", "developer": "Santa Monica Studio" },
+    { "name": "Overwatch", "genre": "Shooter", "year": 2016, "platform": "PC, PS4, Xbox One", "publisher": "Blizzard Entertainment", "developer": "Blizzard Entertainment" },
+    { "name": "Bloodborne", "genre": "Action RPG", "year": 2015, "platform": "PS4", "publisher": "Sony Computer Entertainment", "developer": "FromSoftware" },
+    { "name": "Hades", "genre": "Roguelike", "year": 2020, "platform": "PC, Switch", "publisher": "Supergiant Games", "developer": "Supergiant Games" },
+    { "name": "Assassin's Creed II", "genre": "Action-Adventure", "year": 2009, "platform": "PS3, Xbox 360, PC", "publisher": "Ubisoft", "developer": "Ubisoft Montreal" },
+    { "name": "Halo: Combat Evolved", "genre": "Shooter", "year": 2001, "platform": "Xbox, PC", "publisher": "Microsoft Game Studios", "developer": "Bungie" },
+    { "name": "Metal Gear Solid", "genre": "Stealth", "year": 1998, "platform": "PlayStation", "publisher": "Konami", "developer": "Konami" },
+    { "name": "Final Fantasy VII", "genre": "RPG", "year": 1997, "platform": "PlayStation", "publisher": "Square", "developer": "Square" },
+    { "name": "Persona 5", "genre": "RPG", "year": 2016, "platform": "PS3, PS4", "publisher": "Atlus", "developer": "Atlus" },
+    { "name": "Silent Hill 2", "genre": "Survival Horror", "year": 2001, "platform": "PS2", "publisher": "Konami", "developer": "Konami" }
 ]
-TEST
