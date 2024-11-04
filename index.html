@@ -280,51 +280,51 @@ function displayGuessResult(guess) {
     ];
 
     fields.forEach(field => {
-        const resultDiv = document.createElement('div');
-        resultDiv.className = 'result';
+    const resultDiv = document.createElement('div');
+    resultDiv.className = 'result';
 
-        const heading = document.createElement('div');
-        heading.className = 'result-heading';
-        heading.innerText = field.label;
+    const heading = document.createElement('div');
+    heading.className = 'result-heading';
+    heading.innerText = field.label;
 
-        const data = document.createElement('div');
-        data.className = 'result-data';
-        
-        // Display data from guessedGame, or "Unknown" if not found
+    const data = document.createElement('div');
+    data.className = 'result-data';
+    
+    // Display data from guessedGame, or "Unknown" if not found
+    if (field.key === 'year' && guessedGame && guessedGame.year) {
+        let yearText = guessedGame.year;
+
+        // Check if the guessed year is before or after the selected game's year
+        if (guessedGame.year < selectedGame.year) {
+            yearText += " ↑";  // Correct game is newer
+        } else if (guessedGame.year > selectedGame.year) {
+            yearText += " ↓";  // Correct game is older
+        }
+
+        data.innerText = yearText;
+    } else {
         data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
+    }
 
-        // Platform overlap check (green if there's any overlap)
-        if (field.key === 'platform' && guessedGame && selectedGame.platform) {
-            const guessedPlatforms = guessedGame.platform.split(',').map(p => p.trim().toLowerCase());
-            const selectedPlatforms = selectedGame.platform.split(',').map(p => p.trim().toLowerCase());
-            
-            if (guessedPlatforms.some(platform => selectedPlatforms.includes(platform))) {
-                resultDiv.classList.add('green');
-            } else {
-                resultDiv.classList.add('grey');
-            }
-        }
-        // Exact match (green) for other fields
-        else if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
-            resultDiv.classList.add('green');
-        } 
-        // "Close" match for the year (yellow)
-        else if (field.key === 'year' && guessedGame && selectedGame.year &&
-                 Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
-            resultDiv.classList.add('yellow');
-        } 
-        // No match (grey) for other fields
-        else {
-            resultDiv.classList.add('grey');
-        }
+    // Color coding logic for match, close, and no match
+    if (field.key === 'platform' && guessedGame && selectedGame.platform) {
+        // Platform matching code here...
+    }
+    else if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
+        resultDiv.classList.add('green');
+    } 
+    else if (field.key === 'year' && guessedGame && selectedGame.year &&
+             Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
+        resultDiv.classList.add('yellow');
+    } 
+    else {
+        resultDiv.classList.add('grey');
+    }
 
-        resultDiv.appendChild(heading);
-        resultDiv.appendChild(data);
-        resultContainer.appendChild(resultDiv);
-    });
-
-    guessEntry.appendChild(resultContainer);
-    guessHistory.appendChild(guessEntry);
+    resultDiv.appendChild(heading);
+    resultDiv.appendChild(data);
+    resultContainer.appendChild(resultDiv);
+});
 }
 
 gameReveal.onclick = () => {
