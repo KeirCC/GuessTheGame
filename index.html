@@ -130,6 +130,14 @@
             background-color: #757575;
             color: white;
         }
+        #game-reveal {
+            filter: blur(0px);
+            transition: filter 0.3s ease;
+            cursor: pointer;
+        }
+        #game-reveal.hidden {
+            filter: blur(10px);
+        }
     </style>
 </head>
 <body>
@@ -145,6 +153,12 @@
 
     <div id="guess-history"></div>
 
+    <div id="game-reveal-container">
+        <p>Click to reveal the game!</p>
+        <div id="game-reveal" class="hidden"></div>
+    </div>
+    
+
     <script>
 let gamesList = [];
 let selectedGame;
@@ -152,6 +166,7 @@ let guessCount = 0;
 const maxGuesses = 10;
 let guessedGames = [];
 let validGuesses = [];
+let gameReveal = document.getElementById('game-reveal');
 
 // Fetch the mega games list from games.json and select a random game
 fetch('https://keircc.github.io/GuessTheGame/games.json')
@@ -161,6 +176,7 @@ fetch('https://keircc.github.io/GuessTheGame/games.json')
         validGuesses = gamesList.map(game => game.name.toLowerCase());
         selectedGame = selectRandomGame();
         console.log("Selected game:", selectedGame);
+        gameReveal.innerHTML = `The game you were trying to guess was: <span class="game-name">${selectedGame.name}</span>`;       
     })
     .catch(error => console.error("Error loading games:", error));
 
@@ -309,6 +325,10 @@ function displayGuessResult(guess) {
 
     guessEntry.appendChild(resultContainer);
     guessHistory.appendChild(guessEntry);
+}
+
+gameReveal.onclick = () => {
+    gameReveal.classList.toggle('hidden');
 }
 
     </script>
