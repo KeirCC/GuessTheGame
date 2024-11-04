@@ -130,14 +130,6 @@
             background-color: #757575;
             color: white;
         }
-        #game-reveal {
-            filter: blur(0px);
-            transition: filter 0.3s ease;
-            cursor: pointer;
-        }
-        #game-reveal.hidden {
-            filter: blur(10px);
-        }
     </style>
 </head>
 <body>
@@ -153,12 +145,6 @@
 
     <div id="guess-history"></div>
 
-    <div id="game-reveal-container">
-        <p>Click to reveal the game!</p>
-        <div id="game-reveal" class="hidden"></div>
-    </div>
-    
-
     <script>
 let gamesList = [];
 let selectedGame;
@@ -166,7 +152,6 @@ let guessCount = 0;
 const maxGuesses = 10;
 let guessedGames = [];
 let validGuesses = [];
-let gameReveal = document.getElementById('game-reveal');
 
 // Fetch the mega games list from games.json and select a random game
 fetch('https://keircc.github.io/GuessTheGame/games.json')
@@ -176,7 +161,6 @@ fetch('https://keircc.github.io/GuessTheGame/games.json')
         validGuesses = gamesList.map(game => game.name.toLowerCase());
         selectedGame = selectRandomGame();
         console.log("Selected game:", selectedGame);
-        gameReveal.innerHTML = `The game you were trying to guess was: <span class="game-name">${selectedGame.name}</span>`;       
     })
     .catch(error => console.error("Error loading games:", error));
 
@@ -280,55 +264,51 @@ function displayGuessResult(guess) {
     ];
 
     fields.forEach(field => {
-    const resultDiv = document.createElement('div');
-    resultDiv.className = 'result';
+        const resultDiv = document.createElement('div');
+        resultDiv.className = 'result';
 
-    const heading = document.createElement('div');
-    heading.className = 'result-heading';
-    heading.innerText = field.label;
+        const heading = document.createElement('div');
+        heading.className = 'result-heading';
+        heading.innerText = field.label;
 
-    const data = document.createElement('div');
-    data.className = 'result-data';
-    
-    // Display data from guessedGame, or "Unknown" if not found
-    if (field.key === 'year' && guessedGame && guessedGame.year) {
-        let yearText = guessedGame.year;
+        const data = document.createElement('div');
+        data.className = 'result-data';
+        
+        // Display data from guessedGame, or "Unknown" if not found
+        data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
 
-        // Check if the guessed year is before or after the selected game's year
-        if (guessedGame.year < selectedGame.year) {
-            yearText += " ↑";  // Correct game is newer
-        } else if (guessedGame.year > selectedGame.year) {
-            yearText += " ↓";  // Correct game is older
+        // Platform overlap check (green if there's any overlap)
+        if (field.key === 'platform' && guessedGame && selectedGame.platform) {
+            const guessedPlatforms = guessedGame.platform.split(',').map(p => p.trim().toLowerCase());
+            const selectedPlatforms = selectedGame.platform.split(',').map(p => p.trim().toLowerCase());
+            
+            if (guessedPlatforms.some(platform => selectedPlatforms.includes(platform))) {
+                resultDiv.classList.add('green');
+            } else {
+                resultDiv.classList.add('grey');
+            }
+        }
+        // Exact match (green) for other fields
+        else if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
+            resultDiv.classList.add('green');
+        } 
+        // "Close" match for the year (yellow)
+        else if (field.key === 'year' && guessedGame && selectedGame.year &&
+                 Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
+            resultDiv.classList.add('yellow');
+        } 
+        // No match (grey) for other fields
+        else {
+            resultDiv.classList.add('grey');
         }
 
-        data.innerText = yearText;
-    } else {
-        data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
-    }
+        resultDiv.appendChild(heading);
+        resultDiv.appendChild(data);
+        resultContainer.appendChild(resultDiv);
+    });
 
-    // Color coding logic for match, close, and no match
-    if (field.key === 'platform' && guessedGame && selectedGame.platform) {
-        // Platform matching code here...
-    }
-    else if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
-        resultDiv.classList.add('green');
-    } 
-    else if (field.key === 'year' && guessedGame && selectedGame.year &&
-             Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
-        resultDiv.classList.add('yellow');
-    } 
-    else {
-        resultDiv.classList.add('grey');
-    }
-
-    resultDiv.appendChild(heading);
-    resultDiv.appendChild(data);
-    resultContainer.appendChild(resultDiv);
-});
-}
-
-gameReveal.onclick = () => {
-    gameReveal.classList.toggle('hidden');
+    guessEntry.appendChild(resultContainer);
+    guessHistory.appendChild(guessEntry);
 }
 
     </script>
