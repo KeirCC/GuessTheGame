@@ -234,7 +234,7 @@ let validGuesses = [];
 let gameReveal = document.getElementById('game-reveal');
 
 // Fetch the mega games list from games.json and select a random game
-fetch('games.json')
+fetch('https://keircc.github.io/GuessTheGame/games.json')
     .then(response => response.json())
     .then(data => {
         gamesList = data;
