@@ -277,17 +277,27 @@ function displayGuessResult(guess) {
         // Display data from guessedGame, or "Unknown" if not found
         data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
 
-        // Exact match (green) condition
-        if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
+        // Platform overlap check (green if there's any overlap)
+        if (field.key === 'platform' && guessedGame && selectedGame.platform) {
+            const guessedPlatforms = guessedGame.platform.split(',').map(p => p.trim().toLowerCase());
+            const selectedPlatforms = selectedGame.platform.split(',').map(p => p.trim().toLowerCase());
+            
+            if (guessedPlatforms.some(platform => selectedPlatforms.includes(platform))) {
+                resultDiv.classList.add('green');
+            } else {
+                resultDiv.classList.add('grey');
+            }
+        }
+        // Exact match (green) for other fields
+        else if (guessedGame && guessedGame[field.key] === selectedGame[field.key]) {
             resultDiv.classList.add('green');
         } 
-        // "Close" match for the year (yellow) condition, parse values as integers
+        // "Close" match for the year (yellow)
         else if (field.key === 'year' && guessedGame && selectedGame.year &&
                  Math.abs(parseInt(guessedGame.year) - parseInt(selectedGame.year)) <= 5) {
-            console.log(`Year close match found for ${guessedGame.name}: ${guessedGame.year} vs ${selectedGame.year}`);
             resultDiv.classList.add('yellow');
         } 
-        // No match (grey) condition
+        // No match (grey) for other fields
         else {
             resultDiv.classList.add('grey');
         }
