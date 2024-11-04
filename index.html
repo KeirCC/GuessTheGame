@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guess the Game in progress</title>
-    <style>
+    <style>        
         body {
             font-family: Arial, sans-serif;
             text-align: center;
@@ -83,12 +83,11 @@
             border: 1px solid #333;
         }
         .yellow {
-            background-color: #FFD700 !important; /* Ensure yellow overrides other styles */
+            border-color: #FFD700 !important; /* Ensure yellow overrides other styles */
             color: rgb(0, 0, 0);
-        }
-        .yellow .result-heading,
+        }        
         .yellow .result-data{
-                color: black;       
+                color: #FFD700;       
     
         }
         .guess-name {
@@ -115,24 +114,50 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 1px solid #333;
+            border: 3px solid #333;
             text-align: center;
+            flex-grow: 1;
         }
         .result-heading {
-            font-size: 0.75em;
+            font-size: 1.3em;
             color: #aaaaaa;
+            border-bottom: 1px solid #aaaaaa;
+            width: 100%;
+            padding-bottom: 3px;
+            margin-bottom: 6px;
         }
         .result-data {
             font-size: 1em;
             font-weight: bold;
             color: #ffffff;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
         }
+        .result.green .result-data {
+            color: #4CAF50;
+        }
+        .result-data .newer svg {
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+        }
+        .result-data .older svg {
+            transform: rotate(180deg);
+            width: 15px;
+            height: 15px;
+            fill: currentColor;
+        }
+        .result-data .platform.match {
+            color: #4CAF50;
+        }        
         .green {
-            background-color: #4CAF50;
+            border-color: #4CAF50;
             color: black;
         }
         .grey {
-            background-color: #757575;
+            background-color: #535353;
             color: white;
         }
         #game-reveal {
@@ -174,7 +199,7 @@ let validGuesses = [];
 let gameReveal = document.getElementById('game-reveal');
 
 // Fetch the mega games list from games.json and select a random game
-fetch('https://keircc.github.io/GuessTheGame/games.json')
+fetch('games.json')
     .then(response => response.json())
     .then(data => {
         gamesList = data;
@@ -298,15 +323,15 @@ function displayGuessResult(guess) {
     // Display data from guessedGame, or "Unknown" if not found
     if (field.key === 'year' && guessedGame && guessedGame.year) {
         let yearText = guessedGame.year;
-
+        const chevronSVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>`;
         // Check if the guessed year is before or after the selected game's year
         if (parseInt(guessedGame.year) < parseInt(selectedGame.year)) {
-            yearText += " ↑";  // Correct game is newer
+            yearText += `<span class="newer">${chevronSVG}</span>`;
         } else if (parseInt(guessedGame.year) > parseInt(selectedGame.year)) {
-            yearText += " ↓";  // Correct game is older
+            yearText += `<span class="older">${chevronSVG}</span>`;
         }
 
-        data.innerText = yearText;
+        data.innerHTML = yearText;
     } else {
         data.innerText = guessedGame && guessedGame[field.key] ? guessedGame[field.key] : "Unknown";
     }
@@ -316,10 +341,24 @@ function displayGuessResult(guess) {
         const guessedPlatforms = guessedGame.platform.split(',').map(p => p.trim().toLowerCase());
         const selectedPlatforms = selectedGame.platform.split(',').map(p => p.trim().toLowerCase());
         
-        if (guessedPlatforms.some(platform => selectedPlatforms.includes(platform))) {
+            console.log(guessedPlatforms);
+            console.log(selectedPlatforms);
+            
+            const matchedPlatform = guessedPlatforms.find(platform => selectedPlatforms.includes(platform));
+            if (matchedPlatform) {
             resultDiv.classList.add('green');
+                data.innerText = '';
+                guessedPlatforms.forEach(platform => {
+                    let platformSpan = `<span class="platform ${platform} ${guessedPlatforms.includes(platform) ? 'match' : ''}">${platform}</span>`;
+                    data.innerHTML += platformSpan;
+                });
         } else {
             resultDiv.classList.add('grey');
+                data.innerText = '';
+                guessedPlatforms.forEach(platform => {
+                    let platformSpan = `<span class="platform ${platform}">${platform}</span>`;
+                    data.innerHTML += platformSpan;
+                });
         }
     }
     // Exact match (green) for other fields
