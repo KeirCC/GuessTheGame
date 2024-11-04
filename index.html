@@ -138,6 +138,12 @@
         .result.green .result-data {
             color: #4CAF50;
         }
+        .result.green .result-data .platform {
+            color: #ffffff;
+        }
+        .result.green .result-data .platform.match {
+            color: #4CAF50;
+        }  
         .result-data .newer svg {
             width: 15px;
             height: 15px;
@@ -148,10 +154,7 @@
             width: 15px;
             height: 15px;
             fill: currentColor;
-        }
-        .result-data .platform.match {
-            color: #4CAF50;
-        }        
+        }              
         .green {
             border-color: #4CAF50;
             color: black;
@@ -348,8 +351,10 @@ function displayGuessResult(guess) {
             if (matchedPlatform) {
             resultDiv.classList.add('green');
                 data.innerText = '';
+                data.classList.add('platform');
                 guessedPlatforms.forEach(platform => {
-                    let platformSpan = `<span class="platform ${platform} ${guessedPlatforms.includes(platform) ? 'match' : ''}">${platform}</span>`;
+                    const isMatch = selectedPlatforms.includes(platform);
+                    let platformSpan = `<span class="platform ${platform}${isMatch ? ' match' : ''}">${platform}</span>`;
                     data.innerHTML += platformSpan;
                 });
         } else {
