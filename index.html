@@ -143,6 +143,41 @@
         #game-reveal.hidden {
             filter: blur(10px);
         }
+        #key-section {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #1e1e1e;
+        border-top: 1px solid #333;
+        text-align: center;
+        color: white;
+        }
+
+        .key-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+        }
+
+        .key-item {
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-weight: bold;
+        color: black;
+        }
+
+        .key-item.grey {
+        background-color: #757575;
+        }
+
+        .key-item.yellow {
+         background-color: #FFD700;
+        color: black;
+        }
+
+        .key-item.green {
+        background-color: #4CAF50;
+        }
     </style>
 </head>
 <body>
@@ -351,4 +386,12 @@ gameReveal.onclick = () => {
 
     </script>
 </body>
+<div id="key-section">
+    <p>Use the matching attributes to make more guesses. Good luck!</p>
+    <div class="key-container">
+        <div class="key-item grey">No Match</div>
+        <div class="key-item yellow">Close</div>
+        <div class="key-item green">Match</div>
+    </div>
+</div>
 </html>
